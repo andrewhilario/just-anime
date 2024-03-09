@@ -68,6 +68,15 @@ const WatchAnime = (props: Props) => {
     router.push(`${path}?${params.toString()}`);
   }, [animeInfo, episodeInfo, isLoading, path, query, router]);
 
+  if (isLoading || episodeLoading) {
+    return (
+      <div className="w-full">
+        <Navbar />
+        <div className="text-center py-42">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <Navbar />

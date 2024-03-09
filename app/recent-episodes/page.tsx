@@ -2,7 +2,7 @@
 "use client";
 
 import Navbar from "@/components/navbar/Navbar";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -12,17 +12,17 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { TopAiringAnime } from "@/lib/top-airing";
+import { PopularAnime } from "@/lib/top-airing";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {};
 
-const TopAiring = (props: Props) => {
-  const { data: topAiring, isLoading } = useQuery({
-    queryKey: ["topAiring"],
+const Upcoming = (props: Props) => {
+  const { data: recent, isLoading } = useQuery({
+    queryKey: ["recent"],
     queryFn: async () => {
       const response = await fetch(
-        "https://consumet-api-org.vercel.app/meta/anilist/trending"
+        "https://consumet-api-org.vercel.app/meta/anilist/recent-episodes"
       );
       const data = await response.json();
 
@@ -34,6 +34,10 @@ const TopAiring = (props: Props) => {
     }
   });
 
+  useEffect(() => {
+    console.log("RECENT", recent);
+  }, [recent]);
+
   if (isLoading) {
     const arr = Array.from({ length: 10 });
 
@@ -41,7 +45,7 @@ const TopAiring = (props: Props) => {
       <div className="w-full">
         <Navbar />
         <div className="2xl:text-3xl text-neutral-900 py-5 px-8 font-bold">
-          Top Airing Anime
+          Recent Episodes
         </div>
         <div className="grid grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
           {arr.map((_, i) => {
@@ -64,14 +68,14 @@ const TopAiring = (props: Props) => {
     <div className="w-full">
       <Navbar />
       <div className="2xl:text-3xl text-neutral-900 py-5 px-8 font-bold">
-        Top Airing Anime
+        Recent Episodes
       </div>
       <div className="grid grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
-        {topAiring?.results?.map((anime: TopAiringAnime) => {
+        {recent?.results?.map((anime: any) => {
           return (
             <Card key={anime.id}>
               <CardHeader>
-                <CardTitle>{anime?.title?.romaji}</CardTitle>
+                <CardTitle>{anime?.title?.english}</CardTitle>
               </CardHeader>
               <CardContent>
                 <img
@@ -87,7 +91,7 @@ const TopAiring = (props: Props) => {
                   gap: "0.5rem"
                 }}
               >
-                <CardDescription>{anime.genres.join(", ")}</CardDescription>
+                <CardDescription>{anime?.episodeTitle}</CardDescription>
 
                 <div className="flex justify-center items-center space-x-5">
                   <a
@@ -114,4 +118,4 @@ const TopAiring = (props: Props) => {
   );
 };
 
-export default TopAiring;
+export default Upcoming;

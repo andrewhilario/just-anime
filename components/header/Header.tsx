@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
+import { Skeleton } from "../ui/skeleton";
 
 type Props = {};
 
@@ -35,7 +36,13 @@ const Header = (props: Props) => {
     }
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="w-full h-[92.2vh] relative">
+        <Skeleton className="w-full h-full bg-gray-400" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[92.2vh] relative">
@@ -55,12 +62,18 @@ const Header = (props: Props) => {
             {anime?.title?.romaji}
           </h1>
           <div className="flex items-center justify-center gap-4">
-            <button className="px-4 py-2 bg-red-500 text-white rounded-md">
+            <a
+              href={`${anime.id}/watch`}
+              className="px-4 py-2 bg-red-500 text-white rounded-md"
+            >
               Watch Now
-            </button>
-            <button className="px-4 py-2 bg-white text-black rounded-md">
+            </a>
+            <a
+              href={`${anime.id}`}
+              className="px-4 py-2 bg-white text-black rounded-md"
+            >
               More Info
-            </button>
+            </a>
           </div>
         </div>
       </div>

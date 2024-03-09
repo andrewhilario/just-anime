@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import Navbar from "@/components/navbar/Navbar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AnimeProvider } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -38,7 +39,25 @@ const AnimeInfo = (props: Props) => {
     return (
       <div className="w-full">
         <Navbar />
-        <div className="text-center py-42">Loading...</div>
+        <div className="px-20 mx-auto grid grid-cols-4  space-x-4 items-center mt-10">
+          <div className="flex flex-col justify-center items-center w-full">
+            <Skeleton className="w-96 h-[500px] bg-gray-400 rounded-md mb-5" />
+            <div className="h-8 w-96 bg-gray-400 rounded-md"></div>
+          </div>
+          <div className="space-y-4 col-span-3">
+            <Skeleton className="h-8 w-[800px] bg-gray-400 rounded-md" />
+            <Skeleton className="h-8 w-[650px] bg-gray-400 rounded-md" />
+            <Skeleton className="h-[100px] w-[900px] bg-gray-400 rounded-md" />
+            <div className="grid grid-cols-2 gap-2 w-1/2">
+              <Skeleton className="h-8 w-full bg-gray-400 rounded-md" />
+              <Skeleton className="h-8 w-full bg-gray-400 rounded-md" />
+              <Skeleton className="h-8 w-full bg-gray-400 rounded-md" />
+              <Skeleton className="h-8 w-full bg-gray-400 rounded-md" />
+              <Skeleton className="h-8 w-full bg-gray-400 rounded-md" />
+              <Skeleton className="h-8 w-full bg-gray-400 rounded-md" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
