@@ -4,13 +4,14 @@ import Navbar from "@/components/navbar/Navbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnimeProvider } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 type Props = {};
 
 const AnimeInfo = (props: Props) => {
   const { id } = useParams();
+  const router = useRouter();
 
   const { data: animeInfo, isLoading } = useQuery({
     queryKey: ["animeInfo", id],
@@ -133,7 +134,13 @@ const AnimeInfo = (props: Props) => {
         <div className="grid grid-cols-2 lg:grid-cols-5 items-center gap-2 ">
           {animeInfo?.recommendations?.map((anime: any) => {
             return (
-              <div key={anime.id} className="flex flex-col items-center">
+              <div
+                key={anime.id}
+                className="flex flex-col items-center cursor-pointer"
+                onClick={() => {
+                  router.push(`/${anime.id}`);
+                }}
+              >
                 <img
                   src={anime.image}
                   alt={anime.title.english}
@@ -151,7 +158,13 @@ const AnimeInfo = (props: Props) => {
         <div className="grid grid-cols-2 lg:grid-cols-5 items-center gap-2">
           {animeInfo?.relations?.map((anime: any) => {
             return (
-              <div key={anime.id} className="flex flex-col items-center">
+              <div
+                key={anime.id}
+                className="flex flex-col items-center cursor-pointer"
+                onClick={() => {
+                  router.push(`/${anime.id}`);
+                }}
+              >
                 <img
                   src={anime.image}
                   alt={anime.title.english}
