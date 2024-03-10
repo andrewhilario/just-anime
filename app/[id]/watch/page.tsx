@@ -110,7 +110,7 @@ const WatchAnime = (props: Props) => {
         <div className="grid grid-cols-4 lg:flex items-center justify-start flex-wrap gap-2">
           {animeInfo?.episodes?.map((episode: any) => {
             return (
-              <div
+              <button
                 key={episode.id}
                 className="flex flex-col items-center px-10 py-2 bg-gray-400 rounded-lg text-white"
                 onClick={() => {
@@ -119,8 +119,8 @@ const WatchAnime = (props: Props) => {
                   router.push(`${path}?${params.toString()}`);
                 }}
               >
-                <p className="text-lg font-semibold">{episode.number}</p>
-              </div>
+                <span className="text-lg font-semibold">{episode.number}</span>
+              </button>
             );
           })}
         </div>
