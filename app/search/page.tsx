@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 type Props = {};
 
@@ -57,60 +57,65 @@ const Search = (props: Props) => {
   }
 
   return (
-    <div className="w-full">
-      <Navbar />
-      <div className="flex flex-col items-start justify-start text-neutral-900 py-5 px-8 font-normal">
-        <p className="text-2xl mb-2">
-          Search Result &quot;{query.get("query")}&quot;
-        </p>
-        <p className="text-md">
-          {searchResult?.results?.length} results found for {query.get("query")}
-        </p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
-        {searchResult?.results?.map((anime: any) => {
-          return (
-            <Card key={anime.id}>
-              <CardContent className="p-0">
-                <img
-                  src={anime.image}
-                  alt={anime?.title?.english}
-                  className="w-full h-96 object-cover rounded-t-2xl"
-                />
-              </CardContent>
-              <CardFooter
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "start",
-                  gap: "0.5rem"
-                }}
-                className="space-y-5"
-              >
-                <CardTitle className="pt-4">{anime?.title?.english}</CardTitle>
+    <Suspense>
+      <div className="w-full">
+        <Navbar />
+        <div className="flex flex-col items-start justify-start text-neutral-900 py-5 px-8 font-normal">
+          <p className="text-2xl mb-2">
+            Search Result &quot;{query.get("query")}&quot;
+          </p>
+          <p className="text-md">
+            {searchResult?.results?.length} results found for{" "}
+            {query.get("query")}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
+          {searchResult?.results?.map((anime: any) => {
+            return (
+              <Card key={anime.id}>
+                <CardContent className="p-0">
+                  <img
+                    src={anime.image}
+                    alt={anime?.title?.english}
+                    className="w-full h-96 object-cover rounded-t-2xl"
+                  />
+                </CardContent>
+                <CardFooter
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                    gap: "0.5rem"
+                  }}
+                  className="space-y-5"
+                >
+                  <CardTitle className="pt-4">
+                    {anime?.title?.english}
+                  </CardTitle>
 
-                <div className="flex justify-center items-center space-x-5">
-                  <a
-                    href={`/${anime?.id}`}
-                    className="text-blue-500 hover:text-blue-600 
+                  <div className="flex justify-center items-center space-x-5">
+                    <a
+                      href={`/${anime?.id}`}
+                      className="text-blue-500 hover:text-blue-600 
                    
                   "
-                  >
-                    More info
-                  </a>
-                  <a
-                    href={`/${anime?.id}`}
-                    className="px-4 py-2 bg-red-500 text-white rounded-md"
-                  >
-                    Watch Now
-                  </a>
-                </div>
-              </CardFooter>
-            </Card>
-          );
-        })}
+                    >
+                      More info
+                    </a>
+                    <a
+                      href={`/${anime?.id}`}
+                      className="px-4 py-2 bg-red-500 text-white rounded-md"
+                    >
+                      Watch Now
+                    </a>
+                  </div>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
