@@ -83,7 +83,11 @@ const WatchAnime = (props: Props) => {
 
       <div className="flex flex-col items-start justify-start px-4 lg:px-20 pb-10">
         <div className="text-2xl py-5 font-semibold">
-          <h1>Watch {animeInfo?.title?.english}</h1>
+          <h1>
+            Watch {animeInfo?.title?.english}
+            {" Episode "}
+            {query.get("episode")?.split("-").pop()}
+          </h1>
         </div>
 
         <div className="w-full h-[300px] lg:h-[700px]">
