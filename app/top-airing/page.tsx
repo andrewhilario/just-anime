@@ -43,11 +43,11 @@ const TopAiring = (props: Props) => {
         <div className="2xl:text-3xl text-neutral-900 py-5 px-8 font-bold">
           Top Airing Anime
         </div>
-        <div className="grid grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
           {arr.map((_, i) => {
             return (
               <div className="flex flex-col space-y-3 mb-4" key={i}>
-                <Skeleton className="h-[325px] w-[350px] rounded-xl bg-slate-400" />
+                <Skeleton className="h-[325px] w-full rounded-xl bg-slate-400" />
                 <div className="space-y-2">
                   <Skeleton className="h-4 w-[250px]  bg-slate-400" />
                   <Skeleton className="h-4 w-[200px]  bg-slate-400" />
@@ -66,7 +66,7 @@ const TopAiring = (props: Props) => {
       <div className="2xl:text-3xl text-neutral-900 py-5 px-8 font-bold">
         Top Airing Anime
       </div>
-      <div className="grid grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
         {topAiring?.results?.map((anime: TopAiringAnime) => {
           return (
             <Card key={anime.id}>

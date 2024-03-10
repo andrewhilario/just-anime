@@ -81,12 +81,12 @@ const WatchAnime = (props: Props) => {
     <div className="w-full">
       <Navbar />
 
-      <div className="flex flex-col items-start justify-start px-20 pb-10">
+      <div className="flex flex-col items-start justify-start px-4 lg:px-20 pb-10">
         <div className="text-2xl py-5 font-semibold">
           <h1>Watch {animeInfo?.title?.english}</h1>
         </div>
 
-        <div className="w-full h-[700px]">
+        <div className="w-full h-[300px] lg:h-[700px]">
           <ReactPlayer
             url={episodeInfo?.sources[3]?.url}
             controls={true}
@@ -99,22 +99,19 @@ const WatchAnime = (props: Props) => {
           />
         </div>
       </div>
-      <div className="flex flex-col items-start justify-start space-x-4 px-20 pb-10">
-        <h1 className="text-3xl font-bold my-10">Episodes</h1>
-        <div className="flex items-center justify-start flex-wrap gap-2">
+      <div className="flex flex-col items-start justify-start space-y-2 lg:space-x-4 px-5 lg:px-20 pb-10">
+        <h1 className="text-lg lg:text-3xl font-bold my-4 lg:my-10">
+          Episodes
+        </h1>
+        <div className="grid grid-cols-4 lg:flex items-center justify-start flex-wrap gap-2">
           {animeInfo?.episodes?.map((episode: any) => {
             return (
-              <button
+              <div
                 key={episode.id}
                 className="flex flex-col items-center px-10 py-2 bg-gray-400 rounded-lg text-white"
-                onClick={() => {
-                  const params = new URLSearchParams(query.toString());
-                  params.set("episode", `${episode.id}`);
-                  router.push(`${path}?${params.toString()}`);
-                }}
               >
                 <p className="text-lg font-semibold">{episode.number}</p>
-              </button>
+              </div>
             );
           })}
         </div>
