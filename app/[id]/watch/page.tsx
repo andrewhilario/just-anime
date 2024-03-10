@@ -109,6 +109,11 @@ const WatchAnime = (props: Props) => {
               <div
                 key={episode.id}
                 className="flex flex-col items-center px-10 py-2 bg-gray-400 rounded-lg text-white"
+                onClick={() => {
+                  const params = new URLSearchParams(query.toString());
+                  params.set("episode", `${episode.id}`);
+                  router.push(`${path}?${params.toString()}`);
+                }}
               >
                 <p className="text-lg font-semibold">{episode.number}</p>
               </div>
