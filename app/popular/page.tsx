@@ -69,24 +69,23 @@ const Popular = (props: Props) => {
         {popular?.results?.map((anime: PopularAnime) => {
           return (
             <Card key={anime.id}>
-              <CardHeader>
-                <CardTitle>{anime?.title?.english}</CardTitle>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="p-0">
                 <img
                   src={anime.image}
                   alt={anime?.title?.english}
-                  className="w-full h-80 object-cover"
+                  className="w-full h-96 object-cover rounded-t-2xl"
                 />
               </CardContent>
               <CardFooter
                 style={{
                   display: "flex",
                   flexDirection: "column",
+                  alignItems: "start",
                   gap: "0.5rem"
                 }}
+                className="space-y-5"
               >
-                {/* <CardDescription>{anime.genres.join(", ")}</CardDescription> */}
+                <CardTitle className="pt-4">{anime?.title?.english}</CardTitle>
 
                 <div className="flex justify-center items-center space-x-5">
                   <a

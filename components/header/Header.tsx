@@ -2,8 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
+import ReactPlayer from "react-player";
 
 type Props = {};
 
@@ -35,6 +36,10 @@ const Header = (props: Props) => {
       }
     }
   });
+
+  useEffect(() => {
+    console.log("ANIME", anime);
+  }, [anime]);
 
   if (isLoading) {
     return (
