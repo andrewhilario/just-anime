@@ -6,7 +6,6 @@ import Navbar from "@/components/navbar/Navbar";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import logo from "@/public/app/favicon.ico";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
