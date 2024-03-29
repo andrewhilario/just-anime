@@ -2,7 +2,7 @@
 "use client";
 
 import Navbar from "@/components/navbar/Navbar";
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,15 +14,24 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { PopularAnime } from "@/lib/top-airing";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from "@/components/ui/pagination";
 
 type Props = {};
 
 const Popular = (props: Props) => {
+  const [page, setPage] = useState(1);
   const { data: popular, isLoading } = useQuery({
-    queryKey: ["popular"],
+    queryKey: ["popular", page],
     queryFn: async () => {
       const response = await fetch(
-        "https://consumet-api-org.vercel.app/meta/anilist/popular"
+        `https://consumet-api-org.vercel.app/meta/anilist/popular?page=${page}`
       );
       const data = await response.json();
 
@@ -108,6 +117,23 @@ const Popular = (props: Props) => {
           );
         })}
       </div>
+      <Pagination className="my-5">
+        <PaginationPrevious onClick={() => setPage(page - 1)} />
+        <PaginationContent>
+          {Array.from({ length: 10 }).map((_, i) => {
+            return (
+              <PaginationItem key={i} onClick={() => setPage(i + 1)}>
+                <PaginationLink isActive={page === i + 1}>
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
+          {popular?.hasNextPage && (
+            <PaginationNext onClick={() => setPage(page + 1)} />
+          )}
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 };

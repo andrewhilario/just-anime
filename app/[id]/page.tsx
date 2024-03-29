@@ -121,7 +121,10 @@ const AnimeInfo = (props: Props) => {
             return (
               <div
                 key={episode.id}
-                className="flex flex-col items-center px-10 py-2 bg-gray-400 rounded-lg text-white"
+                className="flex flex-col items-center px-10 py-2 bg-gray-400 rounded-lg text-white hover:bg-gray-500 cursor-pointer"
+                onClick={() => {
+                  router.push(`/${animeInfo.id}/watch?episode=${episode.id}`);
+                }}
               >
                 <p className="text-lg font-semibold">{episode.number}</p>
               </div>

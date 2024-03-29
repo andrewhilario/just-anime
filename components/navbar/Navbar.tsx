@@ -1,16 +1,21 @@
 "use client";
 
+import { auth } from "@/firebase/firebase.config";
 import { ArrowRight, Github, Search, Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import avatarSVG from "@/public/images/avatar.jpg";
+import { signOut } from "firebase/auth";
+import { useAuth } from "@/context/AuthContext";
 type Props = {};
 
 export default function Navbar({}: Props) {
   const [isHovering, setIsHovering] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
+  const { logout, user } = useAuth();
 
   const router = useRouter();
 
@@ -19,6 +24,14 @@ export default function Navbar({}: Props) {
       router.push(`/search?query=${data.search}`);
     } else {
       alert("Please enter a search query");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout("/sign-in");
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -39,6 +52,11 @@ export default function Navbar({}: Props) {
             <a href="/recent-episodes" className="text-white mx-2">
               Recent Episodes
             </a>
+            {auth.currentUser && (
+              <a href="/watch-list" className="text-white mx-2">
+                Watch List
+              </a>
+            )}
           </div>
         </div>
 
@@ -63,28 +81,35 @@ export default function Navbar({}: Props) {
               <Search size={24} className="text-gray-800" />
             </button>
           </form>
-
-          {isHovering && (
-            <>
-              <p className="text-white font-normal text-xs">
-                Follow me on Github for more projects
-              </p>
-              <ArrowRight size={24} className="text-white mx-2" />
-            </>
+          {!auth.currentUser ? (
+            <div className="flex items-center gap-2">
+              <a href="/sign-in" className="text-white px-2 py-1 ">
+                Sign In
+              </a>
+              <a
+                href="/sign-up"
+                className="text-white px-4 py-2 bg-gray-500 rounded-lg "
+              >
+                Sign Up
+              </a>
+            </div>
+          ) : (
+            <div className="hidden lg:flex items-center gap-4">
+              <Avatar>
+                <AvatarImage
+                  src={avatarSVG.src}
+                  className="bg-gray-500 border border-white"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <button
+                onClick={handleLogout}
+                className="text-white px-4 py-2 bg-gray-500 rounded-lg "
+              >
+                Sign Out
+              </button>
+            </div>
           )}
-          <a
-            href="https://github.com/andrewhilario"
-            target="_blank"
-            className="rounded-full hover:bg-gray-500 p-2"
-            onMouseOver={() => {
-              setIsHovering(true);
-            }}
-            onMouseLeave={() => {
-              setIsHovering(false);
-            }}
-          >
-            <Github size={24} className="text-white " />
-          </a>
         </div>
       </nav>
 
@@ -100,6 +125,28 @@ export default function Navbar({}: Props) {
           <a href="/recent-episodes" className="block text-white py-2">
             Recent Episodes
           </a>
+          {auth.currentUser && (
+            <a href="/watch-list" className="block text-white py-2">
+              Watch List
+            </a>
+          )}
+          {!auth.currentUser ? (
+            <div className="flex items-center gap-2">
+              <a href="/sign-in" className="text-white px-2 py-1 ">
+                Sign In
+              </a>
+              <a
+                href="/sign-up"
+                className="text-white px-4 py-2 bg-gray-500 rounded-lg "
+              >
+                Sign Up
+              </a>
+            </div>
+          ) : (
+            <button onClick={handleLogout} className="text-white mt-2">
+              Sign Out
+            </button>
+          )}
           <form
             className="flex px-4 py-2 rounded-lg bg-white mr-4 md:mr-10 justify-between mt-4"
             onSubmit={handleSubmit(onSearch)}

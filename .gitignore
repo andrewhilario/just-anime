@@ -34,3 +34,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+just-anime-firebase-adminsdk-u0l1t-818ecdc449
+.env

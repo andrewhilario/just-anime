@@ -66,16 +66,16 @@ const Header = (props: Props) => {
           <h1 className="text-4xl 2xl:text-7xl font-bold text-white mb-5 2xL:mb-10 mt-auto ">
             {anime?.title?.romaji}
           </h1>
-          <div className="flex items-center justify-start 2xl:justify-center gap-4 w-full">
+          <div className="flex flex-col lg:flex-row items-center justify-start 2xl:justify-start gap-4 w-full">
             <a
               href={`${anime.id}/watch`}
-              className="px-4 py-2 bg-red-500 text-white rounded-md "
+              className="px-4 py-2 bg-red-500 text-white rounded-md w-full text-center lg:w-auto"
             >
               Watch Now
             </a>
             <a
               href={`${anime.id}`}
-              className="px-4 py-2 bg-white text-black rounded-md"
+              className="px-4 py-2 bg-white text-black rounded-md w-full text-center lg:w-auto"
             >
               More Info
             </a>

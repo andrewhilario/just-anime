@@ -2,7 +2,7 @@
 "use client";
 
 import Navbar from "@/components/navbar/Navbar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,15 +14,28 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { TopAiringAnime } from "@/lib/top-airing";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Bookmark, BookmarkCheck } from "lucide-react";
+import useAddToFavorites from "@/hooks/useAddToFavorites";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from "@/components/ui/pagination";
 
 type Props = {};
 
 const TopAiring = (props: Props) => {
+  const { addToFavorites, getFavorites, favoritesMap } = useAddToFavorites();
+  const [page, setPage] = useState(1);
+
   const { data: topAiring, isLoading } = useQuery({
-    queryKey: ["topAiring"],
+    queryKey: ["topAiring", page],
     queryFn: async () => {
       const response = await fetch(
-        "https://consumet-api-org.vercel.app/meta/anilist/trending"
+        `https://consumet-api-org.vercel.app/meta/anilist/trending?page=${page}`
       );
       const data = await response.json();
 
@@ -33,6 +46,10 @@ const TopAiring = (props: Props) => {
       }
     }
   });
+
+  useEffect(() => {
+    console.log("TOP AIRING", topAiring);
+  }, [topAiring]);
 
   if (isLoading) {
     const arr = Array.from({ length: 10 });
@@ -59,6 +76,8 @@ const TopAiring = (props: Props) => {
       </div>
     );
   }
+
+  // const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className="w-full">
@@ -106,12 +125,47 @@ const TopAiring = (props: Props) => {
                   >
                     Watch Now
                   </a>
+                  <button
+                    className="text-blue-500 hover:text-blue-600"
+                    onClick={() => {
+                      addToFavorites({
+                        id: anime.id,
+                        name: anime.title.english,
+                        image: anime.image,
+                        description: anime.description
+                      });
+                      getFavorites(anime.id);
+                    }}
+                  >
+                    {!favoritesMap[anime.id] ? (
+                      <Bookmark size={24} className="text-orange-400" />
+                    ) : (
+                      <BookmarkCheck size={24} className="text-orange-400" />
+                    )}
+                  </button>
                 </div>
               </CardFooter>
             </Card>
           );
         })}
       </div>
+      <Pagination className="my-5">
+        <PaginationPrevious onClick={() => setPage(page - 1)} />
+        <PaginationContent>
+          {Array.from({ length: 10 }).map((_, i) => {
+            return (
+              <PaginationItem key={i} onClick={() => setPage(i + 1)}>
+                <PaginationLink isActive={page === i + 1}>
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
+          {topAiring?.hasNextPage && (
+            <PaginationNext onClick={() => setPage(page + 1)} />
+          )}
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 };

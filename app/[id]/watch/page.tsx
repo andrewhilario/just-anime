@@ -63,7 +63,7 @@ const WatchAnime = (props: Props) => {
     console.log("EPISODE INFO", episodeInfo);
     const params = new URLSearchParams(query.toString());
     if (!query.get("episode") && !isLoading) {
-      params.set("episode", `${animeInfo?.episodes[0]?.id}`);
+      params.set("episode", `${animeInfo?.episodes.pop().id}`);
     }
     router.push(`${path}?${params.toString()}`);
   }, [animeInfo, episodeInfo, isLoading, path, query, router]);

@@ -2,7 +2,7 @@
 "use client";
 
 import Navbar from "@/components/navbar/Navbar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -12,40 +12,40 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { PopularAnime } from "@/lib/top-airing";
+import { TopAiringAnime } from "@/lib/top-airing";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from "@/components/ui/pagination";
+import useAddToFavorites from "@/hooks/useAddToFavorites";
+import { Anime } from "@/types/favorites";
+import { useAuth } from "@/context/AuthContext";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase/firebase.config";
 
 type Props = {};
 
-const Upcoming = (props: Props) => {
-  const [page, setPage] = useState(1);
-  const { data: recent, isLoading } = useQuery({
-    queryKey: ["recent", page],
-    queryFn: async () => {
-      const response = await fetch(
-        `https://consumet-api-org.vercel.app/meta/anilist/recent-episodes?page=${page.toString()}`
-      );
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      } else {
-        return data;
-      }
-    }
-  });
+const WatchList = (props: Props) => {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [listFavorites, setListFavorites] = React.useState<any[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
-    console.log("RECENT", recent);
-  }, [recent]);
+    if (user) {
+      const unsubscribe = onSnapshot(doc(db, "users", user.uid), (doc) => {
+        if (doc.exists()) {
+          const watchList = doc.data().watchList;
+          if (watchList) {
+            setListFavorites(watchList);
+            setIsLoading(false);
+          }
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    console.log("FAVORITES", listFavorites);
+  }, [listFavorites]);
 
   if (isLoading) {
     const arr = Array.from({ length: 10 });
@@ -54,7 +54,7 @@ const Upcoming = (props: Props) => {
       <div className="w-full">
         <Navbar />
         <div className="2xl:text-3xl text-neutral-900 py-5 px-8 font-bold">
-          Recent Episodes
+          Watch List
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
           {arr.map((_, i) => {
@@ -77,10 +77,10 @@ const Upcoming = (props: Props) => {
     <div className="w-full">
       <Navbar />
       <div className="2xl:text-3xl text-neutral-900 py-5 px-8 font-bold">
-        Recent Episodes
+        Watch Lists
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-5 gap-2 w-full mx-auto py-4 px-8">
-        {recent?.results?.map((anime: any) => {
+        {listFavorites?.map((anime: any) => {
           return (
             <Card key={anime.id}>
               <CardContent className="p-0">
@@ -99,9 +99,10 @@ const Upcoming = (props: Props) => {
                 }}
                 className="space-y-5"
               >
-                <CardTitle className="pt-4">
-                  {anime?.title?.english} Episode {anime?.episodeNumber}
-                </CardTitle>
+                <CardTitle className="pt-4">{anime?.name}</CardTitle>
+                {/* <CardDescription className="">
+                  {anime.genres.join(", ")}
+                </CardDescription> */}
 
                 <div className="flex justify-center items-center space-x-5">
                   <a
@@ -113,9 +114,7 @@ const Upcoming = (props: Props) => {
                     More info
                   </a>
                   <a
-                    href={`${anime?.id}/watch?episode=${anime?.episodeId
-                      .split("/")
-                      .pop()}`}
+                    href={`/${anime?.id}`}
                     className="px-4 py-2 bg-red-500 text-white rounded-md"
                   >
                     Watch Now
@@ -126,23 +125,8 @@ const Upcoming = (props: Props) => {
           );
         })}
       </div>
-      <Pagination className="my-5">
-        <PaginationPrevious onClick={() => setPage(page - 1)} />
-        <PaginationContent>
-          {Array.from({ length: 10 }).map((_, i) => {
-            return (
-              <PaginationItem key={i} onClick={() => setPage(i + 1)}>
-                <PaginationLink isActive={page === i + 1}>
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          })}
-          <PaginationNext onClick={() => setPage(page + 1)} />
-        </PaginationContent>
-      </Pagination>
     </div>
   );
 };
 
-export default Upcoming;
+export default WatchList;
