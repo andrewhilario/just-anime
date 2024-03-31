@@ -9,3 +9,14 @@ export enum AnimeProvider {
   MARIN = "marin",
   ZORO = "zoro"
 }
+
+export enum MangaProvider {
+  MANGADEX = "mangadex",
+  MANGAFOX = "mangafox",
+  MANGAKAKALOT = "mangakakalot",
+  MANGAHERE = "mangahere",
+  MANGAPARK = "mangapark",
+  MANGAREADER = "mangareader",
+  MANGASEE123 = "mangasee123",
+  MANGAPILL = "mangapill"
+}
