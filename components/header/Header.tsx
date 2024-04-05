@@ -37,9 +37,27 @@ const Header = (props: Props) => {
     }
   });
 
+  const { data: episodeInfo, isLoading: episodeLoading } = useQuery({
+    queryKey: ["episodeInfo", anime?.id, anime?.episodes?.[0]?.id],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://consumet-api-org.vercel.app/meta/anilist/watch/${anime?.episodes?.[0]?.id}`
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      } else {
+        return data;
+      }
+    },
+    enabled: !!anime?.id && !!anime?.episodes?.[0]?.id
+  });
+
   useEffect(() => {
     console.log("ANIME", anime);
-  }, [anime]);
+    console.log("EPISODE", episodeInfo);
+  }, [anime, episodeInfo]);
 
   if (isLoading) {
     return (
@@ -52,13 +70,29 @@ const Header = (props: Props) => {
   return (
     <div className="w-full h-[92.2vh] relative">
       <div className="absolute top-0 left-0 w-full h-full">
-        <Image
-          src={anime?.cover}
-          alt="Just Anime"
-          width={1080}
-          height={2048}
-          className="w-full h-full object-cover "
-        />
+        {anime?.episodes?.length > 0 ? (
+          <div className="h-full overflow-hidden">
+            <ReactPlayer
+              url={episodeInfo?.sources?.[3]?.url + "?start=600"}
+              muted={true}
+              playing={true}
+              width={"100%"}
+              height={"auto"} // or you can set height to null
+              style={{
+                overflow: "hidden"
+              }}
+              onStart={() => {}}
+            />
+          </div>
+        ) : (
+          <Image
+            src={anime?.cover}
+            alt="Just Anime"
+            width={1080}
+            height={2048}
+            className="w-full h-full object-cover "
+          />
+        )}
       </div>
       <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black to-transparent px-10 2xl:px-[10rem]">
